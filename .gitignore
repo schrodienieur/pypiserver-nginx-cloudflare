@@ -1,2 +1,3 @@
-auth
-certs
+auth/.htpasswd
+certs/*.pem
+certs/*.key
