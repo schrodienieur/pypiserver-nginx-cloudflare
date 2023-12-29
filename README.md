@@ -1,6 +1,7 @@
 # pypiserver-nginx-cloudflare
 Private PyPi - Nginx - Cloudflare SSL
 
+This repository is supposed to create a private PyPI server hosted in Google Compute Engine e2-micro instance with pypi.mydomain.com as hostname and SSL from Cloudflare. You must change hostname to your hostname.
 
 ## Installation
 
@@ -55,6 +56,11 @@ Private PyPi - Nginx - Cloudflare SSL
     ```bash
     sudo docker compose up -d
     ```
+
+## Troubleshooting
+Site visitors may see untrusted certificate errors if you pause or disable Cloudflare on subdomains that use Origin CA certificates. These certificates only encrypt traffic between Cloudflare and your origin server, not traffic from client browsers to your origin.
+
+Solution: Enable Proxied status in A Records configuration.
 
 
 ## Usage
