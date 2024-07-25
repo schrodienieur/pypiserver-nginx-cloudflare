@@ -1,17 +1,17 @@
 # pypiserver-nginx-cloudflare
 Private PyPi - Nginx - Cloudflare SSL
 
-This repository is supposed to create a private PyPI server hosted in Google Compute Engine e2-micro instance with pypi.mydomain.com as hostname and SSL from Cloudflare. You must change hostname to your hostname.
+This repository is supposed to create a private PyPI server hosted in Google Compute Engine e2-micro instance (free Tier) with pypi.mydomain.com as hostname and SSL from Cloudflare. You must change hostname to your hostname.
 
 ## Installation
 
-### 1. Server setup
+## 1. Server setup
 
 - Create Ubuntu e2-micro instance in [Compute Engine](https://console.cloud.google.com/compute), in the Advanced options > Networking, fill in your hostname (ex. pypi.mydomain.com).
 
 - Go to Cloudflare > Website > DNS > Records, then Add A Record to point your hostname to server IP.
 
-### 2. Dependency setup
+## 2. Dependency setup
 - Install Docker using this [guide](https://docs.docker.com/engine/install/ubuntu/)  
 
 - Install apache2-utils 
@@ -21,7 +21,7 @@ This repository is supposed to create a private PyPI server hosted in Google Com
     ```
 
 
-### 3. PyPi server setup
+## 3. PyPi server setup
 - Clone this repository, and cd into it.
 - Create folder to store packages, and create pypiserver user and group and give them access
 
@@ -33,29 +33,29 @@ This repository is supposed to create a private PyPI server hosted in Google Com
     sudo chmod g+s packages
     ```
 
-### 4. Auth setup
+## 4. Auth setup
 - Create .htpasswd file
 
-    ```bash
-    httpasswd -sc auth/.httpasswd username
-    ```
+  ```bash
+  httpasswd -sc auth/.httpasswd <username>
+  ```
 
-    To add more user,
-    ```bash
-    httpasswd -sc auth/.httpasswd second_username
-    ```
+- To add more user,
+  ```bash
+  httpasswd -sc auth/.httpasswd <second_username>
+  ```
 
-### 5. SSL setup
+## 5. SSL setup
 - Go to Cloudflare > Website > SSL/TLS > Origin Server, then create RSA certificate, Fill hostnames with your hostname. Choose certificate validity, then click Create.
 - Save Origin Certificate and Private Key as pypi.mydomain.com.pem and pypi.mydomain.com.key, then place it in certs folder.
 - Do not forget to adjust hostname in Nginx configuration inside nginx/conf.d/local.conf file.
 
-### 6. Start server
+## 6. Start server
 - Start docker 
     
-    ```bash
-    sudo docker compose up -d
-    ```
+  ```bash
+  sudo docker compose up -d
+  ```
 
 ## Troubleshooting
 Site visitors may see untrusted certificate errors if you pause or disable Cloudflare on subdomains that use Origin CA certificates. These certificates only encrypt traffic between Cloudflare and your origin server, not traffic from client browsers to your origin.
@@ -76,13 +76,13 @@ poetry build -f wheel
 #### Publish package
 
 Make sure poetry is configured to have access to that PyPI.
-```
+```bash
 poetry config repositories.myrepo https://pypi.mydomain.com/
-poetry config http-basic.myrepo username password
+poetry config http-basic.myrepo <username> <password>
 ```
 
 Publish the package
-```
+```bash
 poetry publish -r myrepo
 ```
 
@@ -90,26 +90,26 @@ poetry publish -r myrepo
 
 ##### Using Poetry
 
-1. Add your repository
-```commandline
-poetry source add --priority=supplemental myrepo https://pypi.mydomain.com/simple/
-```
+- Add your repository
+  ```bash
+  poetry source add --priority=supplemental myrepo https://pypi.mydomain.com/simple/
+  ```
 
-2. Configure your credentials
-```commandline
-poetry config http-basic.myrepo username password
-```
+- Configure your credentials
+  ```bash
+  poetry config http-basic.myrepo <username> <password>
+  ```
 
-3. Install package
-```commandline
-poetry add --source myrepo <package_name>
-```
+- Install package
+  ```bash
+  poetry add --source myrepo <package_name>
+  ```
 
 ### Pip
 
-1. Install package
-```commandline
-pip install -f https://pypi.mydomain.com/packages blegping
+- Install package
+```bash
+pip install -f https://pypi.mydomain.com/packages <package-name>
 ```
 ***It will ask you for username and password.***
 
