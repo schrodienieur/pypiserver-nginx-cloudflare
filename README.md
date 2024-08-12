@@ -57,10 +57,10 @@ This repository is supposed to create a private PyPI server hosted in Google Com
   sudo docker compose up -d
   ```
 ## 7. Stop PyPi server
-- Stop pypiserver container
+- Stop pypiserver and nginx container
 
   ```bash
-  sudo docker stop pypiserver
+  sudo docker stop pypiserver nginx
   ```
 
 ## Troubleshooting
