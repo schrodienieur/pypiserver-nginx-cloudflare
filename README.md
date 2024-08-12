@@ -37,12 +37,12 @@ This repository is supposed to create a private PyPI server hosted in Google Com
 - Create .htpasswd file
 
   ```bash
-  httpasswd -sc auth/.httpasswd <username>
+  htpasswd -sc auth/.htpasswd <username>
   ```
 
 - To add more user,
   ```bash
-  httpasswd -sc auth/.httpasswd <second_username>
+  htpasswd -sc auth/.htpasswd <second_username>
   ```
 
 ## 5. SSL setup
