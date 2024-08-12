@@ -50,18 +50,38 @@ This repository is supposed to create a private PyPI server hosted in Google Com
 - Save Origin Certificate and Private Key as pypi.mydomain.com.pem and pypi.mydomain.com.key, then place it in certs folder.
 - Do not forget to adjust hostname in Nginx configuration inside nginx/conf.d/local.conf file.
 
-## 6. Start server
+## 6. Start PyPi server
 - Start docker 
     
   ```bash
   sudo docker compose up -d
   ```
+## 7. Stop PyPi server
+- Stop pypiserver container
+
+  ```bash
+  sudo docker stop pypiserver
+  ```
 
 ## Troubleshooting
+
+- Certificate error on client side
+
 Site visitors may see untrusted certificate errors if you pause or disable Cloudflare on subdomains that use Origin CA certificates. These certificates only encrypt traffic between Cloudflare and your origin server, not traffic from client browsers to your origin.
 
 Solution: Enable Proxied status in A Records configuration.
 
+- PyPi server not running after VM reboot
+
+Sometimes, VM automatically restarted if they are terminated for non-user-initiated reasons (maintenance event, hardware failure, software failure and so on). In Google Compute Engine, we can add startup script that will run when your instance boots up or restarts.
+
+  ```bash
+  #! /bin/bash
+
+  cd /home/<your_username>/pypiserver-nginx-cloudflare 
+
+  sudo docker compose up -d
+  ```
 
 ## Usage
 
