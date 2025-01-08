@@ -5,13 +5,13 @@ This repository is supposed to create a private PyPI server hosted in Google Com
 
 ## Installation
 
-## 1. Server setup
+### 1. Server setup
 
 - Create Ubuntu e2-micro instance in [Compute Engine](https://console.cloud.google.com/compute), in the Advanced options > Networking, fill in your hostname (ex. pypi.mydomain.com).
 
 - Go to Cloudflare > Website > DNS > Records, then Add A Record to point your hostname to server IP.
 
-## 2. Dependency setup
+### 2. Dependency setup
 - Install Docker using this [guide](https://docs.docker.com/engine/install/ubuntu/)  
 
 - Install apache2-utils 
@@ -21,7 +21,7 @@ This repository is supposed to create a private PyPI server hosted in Google Com
     ```
 
 
-## 3. PyPi server setup
+### 3. PyPi server setup
 - Clone this repository, and cd into it.
 - Create folder to store packages, and create pypiserver user and group and give them access
 
@@ -33,7 +33,7 @@ This repository is supposed to create a private PyPI server hosted in Google Com
     sudo chmod g+s packages
     ```
 
-## 4. Auth setup
+### 4. Auth setup
 - Create .htpasswd file
 
   ```bash
@@ -45,22 +45,40 @@ This repository is supposed to create a private PyPI server hosted in Google Com
   htpasswd -sc auth/.htpasswd <second_username>
   ```
 
-## 5. SSL setup
+### 5. SSL setup
 - Go to Cloudflare > Website > SSL/TLS > Origin Server, then create RSA certificate, Fill hostnames with your hostname. Choose certificate validity, then click Create.
 - Save Origin Certificate and Private Key as pypi.mydomain.com.pem and pypi.mydomain.com.key, then place it in certs folder.
 - Do not forget to adjust hostname in Nginx configuration inside nginx/conf.d/local.conf file.
 
-## 6. Start PyPi server
+
+### 7. Start PyPi server
 - Start docker 
     
   ```bash
   sudo docker compose up -d
   ```
-## 7. Stop PyPi server
+  Docker will pull the latest image, build, and then start pypiserver and nginx containers. 
+
+### 8. Stop PyPi server
 - Stop pypiserver and nginx container
 
   ```bash
   sudo docker stop pypiserver nginx
+  ```
+## Update
+For updating the image, use the following steps:
+### 1. Stop and remove the containers
+  ```bash
+  sudo docker compose down
+  ```
+
+### 2. Pulling latest image, build, and start the containers.
+  ```bash
+  docker-compose up --pull always --build -d
+  ```
+### 3. Remove unused old image
+  ```bash
+  sudo docker image prune -f
   ```
 
 ## Troubleshooting
