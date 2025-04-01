@@ -74,7 +74,7 @@ For updating the image, use the following steps:
 
 ### 2. Pulling latest image, build, and start the containers.
   ```bash
-  docker compose up --pull always --build -d
+  sudo docker compose up --pull always --build -d
   ```
 ### 3. Remove unused old image
   ```bash
