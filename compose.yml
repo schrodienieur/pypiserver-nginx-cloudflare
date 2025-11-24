@@ -1,33 +1,31 @@
 services:
-    pypiserver:
-        image: pypiserver/pypiserver:latest
-        container_name: pypiserver
-        ports:
-            - "8080:8080"
-        volumes:
-            - type: bind
-              source: ./packages
-              target: /packages
-        command: run --hash-algo=sha256 -a . -P . /packages
+  pypiserver:
+    image: pypiserver/pypiserver:latest
+    container_name: pypiserver
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./packages
+        target: /packages
+    command: run --hash-algo=sha256 -a . -P . /packages
 
-    nginx:
-      image: nginx:latest
-      container_name: nginx
-      ports:
-        - "80:8080"
-        - "443:443"
-      volumes:
-        - type: bind
-          source: ./nginx/conf.d
-          target: /etc/nginx/conf.d
-        - type: bind
-          source: ./auth
-          target: /etc/nginx/auth
-        - type: bind
-          source: ./certs
-          target: /etc/ssl/certs
-      depends_on:
-        - pypiserver
-      command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-
-
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:8080"
+      - "443:443"
+    volumes:
+      - type: bind
+        source: ./nginx/conf.d
+        target: /etc/nginx/conf.d
+      - type: bind
+        source: ./nginx/auth
+        target: /etc/nginx/auth
+      - type: bind
+        source: ./certs
+        target: /etc/ssl/certs
+    depends_on:
+      - pypiserver
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
